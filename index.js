@@ -2,9 +2,10 @@ const express=require('express')
 const path=require('path')
 const http=require('http')
 const socketio=require('socket.io')
+const Filter = require('bad-words'),
 
 
-const app=express()
+ app=express()
 //create new web server
 const server=http.createServer(app)
 //initialize a new instance of socket.io by passing the (the HTTP server) object
@@ -27,10 +28,16 @@ io.on('connection', (socket) => {
   //sends message to other users when the new user joins
   socket.broadcast.emit('message',"A new user has joined")
 
-  socket.on('sendMessage',(message,callback)=>{
+  socket.on('sendMessage',(message,callback)=>{ 
+    const filter = new Filter();
+
+     if(filter.isProfane(message)){
+       return callback("profanity is not allowed")
+     }
+
     io.emit('message',message)
     //for the acknowledgement of event
-    callback("hahahhahahahah")
+    callback();
   })
 
   socket.on('sendLocation',({latitude,longitude})=>{

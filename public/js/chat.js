@@ -18,8 +18,12 @@ messageForm.addEventListener('submit',(event)=>{
     //preventing default submission of form
     event.preventDefault();
     const message=event.target.elements.message.value
-    socket.emit("sendMessage",message,(message)=>{
-        console.log("message was successfully delivered",message)
+    socket.emit("sendMessage",message,(error)=>{
+        if(error){
+            return console.log(error)
+        }
+
+        console.log("Message delievred!")
     })
 })
 
