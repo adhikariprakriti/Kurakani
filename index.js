@@ -3,7 +3,9 @@ const path=require('path')
 const http=require('http')
 const {generateMessage}=require('./src/utils/messages')
 const socketio=require('socket.io')
-const Filter = require('bad-words'),
+const Filter = require('bad-words')
+const queryString = require('query-string');
+
 
 
  app=express()
@@ -29,11 +31,21 @@ app.use(express.static(publicDirectoryPath));
 io.on('connection', (socket) => {
     console.log('new web socket connection');
 
-    //sends message when the user gets connected
-  socket.emit('message',generateMessage("hello user!!"))
+    
+  socket.on('join',(searchString)=>{
+    const {username,room} = queryString.parse(searchString);
 
-  //sends message to other users when the new user joins
-  socket.broadcast.emit('message',generateMessage("A new user has joined"))
+    //join individual room and this method can be used only in server
+    socket.join(room)
+
+    //sends message when the user gets connected
+  socket.emit('message',generateMessage("Welcome!!"))
+
+  //sends message to other users of specific room when the new user joins to that room
+  socket.broadcast.to(room).emit('message',generateMessage(`${username} has joined`))
+   
+  })
+
 
   socket.on('sendMessage',(message,callback)=>{ 
     const filter = new Filter();

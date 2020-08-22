@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Kurakani App</title>
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
-    <h1>chat app</h1>
-    <div id="messages" ></div>
-    <form method="POST">
-        <input name="message" type="text" placeholder="Type Message....." value=""/>
-        <button id="send-button" type="submit">Send</button>
-    </form>
-       <button id="send-location">Send location</button>
+    <div class="centered-form">
+        <div class="centered-form__form">
+            <h1>Join Kurakani</h1>
+            <form action="/chat.html" class="form-field">
+                <label>Display Name</label>
+                <input type="text" name="username" placeholder="Display Name" required/>
 
-     <script src = "/socket.io/socket.io.js"></script>
-     <script src = "./js/chat.js"></script>
+                <label>Room</label>
+                <input type="text" name="room" placeholder="Room" required/>
 
+                <button>Join</button>
+            </form>
+        </div>
+          
+    </div>
 </body>
 </html>

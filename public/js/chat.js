@@ -3,13 +3,34 @@ const socket=io();
 socket.on('message',(message)=>{
     console.log(message)
     //Insert html into specified position
-    document.querySelector("#messages").insertAdjacentHTML("beforeend",`<div><p>${message.text}</p></div>`)
+    document.querySelector("#messages").insertAdjacentHTML("beforeend",
+    `<li class="message">
+    <div class="message__title">
+        <h4>Amrit</h4>
+        <span>${message.createdAt}</span>
+    </div>
+    <div class="message__body">
+       <p>${message.text}</p>
+    </div>
+    </li>`)
 })
 
 socket.on('locationMessage',(url)=>{
     console.log(url)
     //Insert html into specified position
-    document.querySelector("#messages").insertAdjacentHTML("beforeend",`<p><a href="${url.text}" target="_blank">My current location</a></p>`)
+    document.querySelector("#messages").insertAdjacentHTML("beforeend",
+    `<li class="message">
+    <div class="message__title">
+      <h4>Admin</h4>
+      <span>${url.createdAt}</span>
+    </div>
+    <div class="message__body">
+      <p>
+        <a href="${url.text}" target="_blank">My current location</a>
+      </p>
+    </div>
+  </li>`
+  )
 })
 
 
@@ -71,3 +92,4 @@ locationButton.addEventListener('click',()=>{
 
 });
 
+socket.emit('join',location.search)
