@@ -6,7 +6,7 @@ socket.on('message',(message)=>{
     document.querySelector("#messages").insertAdjacentHTML("beforeend",
     `<li class="message">
     <div class="message__title">
-        <h4>Amrit</h4>
+        <h4>${message.username}</h4>
         <span>${message.createdAt}</span>
     </div>
     <div class="message__body">
@@ -21,7 +21,7 @@ socket.on('locationMessage',(url)=>{
     document.querySelector("#messages").insertAdjacentHTML("beforeend",
     `<li class="message">
     <div class="message__title">
-      <h4>Admin</h4>
+      <h4>${url.username}</h4>
       <span>${url.createdAt}</span>
     </div>
     <div class="message__body">
@@ -51,7 +51,7 @@ messageForm.addEventListener('submit',(event)=>{
     
     socket.emit("sendMessage",message,(error)=>{
          //clear input field after sending message
-         messageInput.value=" "
+         messageInput.value=null
          messageInput.focus();
         if(error){
             return console.log(error)

@@ -1,7 +1,8 @@
 var moment = require('moment'); 
 
-generateMessage=(text)=>{ 
- return  { 
+generateMessage=(username,text)=>{ 
+ return  {
+      username, 
        text,
       createdAt:moment(new Date().getTime()).format('h:mm a')
    }

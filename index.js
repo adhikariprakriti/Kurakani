@@ -43,10 +43,10 @@ io.on('connection', (socket) => {
     socket.join(user.room)
 
     //sends message when the user gets connected
-  socket.emit('message',generateMessage("Welcome!!"))
+  socket.emit('message',generateMessage("admin","Welcome!!"))
 
   //sends message to other users of specific room when the new user joins to that room
-  socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined`))
+  socket.broadcast.to(user.room).emit('message',generateMessage("admin",`${user.username} has joined`))
    
 
   callback()
@@ -54,19 +54,22 @@ io.on('connection', (socket) => {
 
 
   socket.on('sendMessage',(message,callback)=>{ 
-    const filter = new Filter();
 
+    const user=getUser(socket.id)
+    const filter = new Filter();
      if(filter.isProfane(message)){
        return callback("profanity is not allowed")
      }
 
-    io.emit('message',generateMessage(message))
+    io.to(user.room).emit('message',generateMessage(user.username,message))
     //for the acknowledgement of event
     callback();
   })
 
   socket.on('sendLocation',({latitude,longitude},callback)=>{
-      io.emit('locationMessage',generateMessage(`https://google.com/maps?q=${latitude},${longitude}`))
+    const user=getUser(socket.id)
+
+      io.to(user.room).emit('locationMessage',generateMessage(user.username,`https://google.com/maps?q=${latitude},${longitude}`))
         //for the acknowledgement that the location has been shared
         callback()
   })
@@ -77,7 +80,7 @@ io.on('connection', (socket) => {
   // const{id,room,username}= (...user)
   // console.log(...user)
    if(user){
-    io.to(user[0].room).emit('message',generateMessage(`${user[0].username} has Left`))
+    io.to(user[0].room).emit('message',generateMessage("admin",`${user[0].username} has Left`))
    }
   })
   });
