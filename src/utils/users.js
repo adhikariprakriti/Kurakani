@@ -51,29 +51,6 @@ const removeUser=(id)=>{
        }
 }
 
-addUser({
-    id:77,
-    username:"kjjj",
-    room:"abc"
-
-})
-
-addUser({
-    id:25,
-    username:"apple",
-    room:"city"
-
-})
-
-addUser({
-    id:24,
-    username:"banana",
-    room:"city"
-
-})
-
-
-console.log(getUsersInRoom('city'))
 
 module.exports={
     addUser,

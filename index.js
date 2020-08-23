@@ -2,6 +2,7 @@ const express=require('express')
 const path=require('path')
 const http=require('http')
 const {generateMessage}=require('./src/utils/messages')
+const {addUser,getUser,removeUser,getUsersInRoom}=require("./src/utils/users")
 const socketio=require('socket.io')
 const Filter = require('bad-words')
 const queryString = require('query-string');
@@ -32,18 +33,23 @@ io.on('connection', (socket) => {
     console.log('new web socket connection');
 
     
-  socket.on('join',(searchString)=>{
+  socket.on('join',(searchString,callback)=>{
     const {username,room} = queryString.parse(searchString);
-
+    const {error,user}=addUser({id:socket.id,username,room})
+    if(error){
+         return callback(error)
+    }
     //join individual room and this method can be used only in server
-    socket.join(room)
+    socket.join(user.room)
 
     //sends message when the user gets connected
   socket.emit('message',generateMessage("Welcome!!"))
 
   //sends message to other users of specific room when the new user joins to that room
-  socket.broadcast.to(room).emit('message',generateMessage(`${username} has joined`))
+  socket.broadcast.to(user.room).emit('message',generateMessage(`${user.username} has joined`))
    
+
+  callback()
   })
 
 
@@ -67,7 +73,12 @@ io.on('connection', (socket) => {
 
   //runs when the user gets disconnected
   socket.on('disconnect',()=>{
-    io.emit('message',generateMessage("A user has Left"))
+   const user=removeUser(socket.id)
+  // const{id,room,username}= (...user)
+  // console.log(...user)
+   if(user){
+    io.to(user[0].room).emit('message',generateMessage(`${user[0].username} has Left`))
+   }
   })
   });
   

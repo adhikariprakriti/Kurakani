@@ -92,4 +92,10 @@ locationButton.addEventListener('click',()=>{
 
 });
 
-socket.emit('join',location.search)
+socket.emit('join',location.search,(error)=>{
+    if(error){
+      alert(error)
+      location.href='/'
+    }
+      
+})
