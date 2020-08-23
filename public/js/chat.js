@@ -39,7 +39,10 @@ const messageForm=document.querySelector("form")
 const messageInput=document.querySelector("input")
 const locationButton=document.querySelector("#send-location")
 const messageButton=document.querySelector("#send-button")
+const roomTitle=document.querySelector(".room-title")
+const userList=document.querySelector(".users")
 
+//on clicking send button
 messageForm.addEventListener('submit',(event)=>{
     //preventing default submission of form
     event.preventDefault();
@@ -96,6 +99,14 @@ socket.emit('join',location.search,(error)=>{
     if(error){
       alert(error)
       location.href='/'
-    }
-      
+    }    
+})
+
+socket.on('roomData',({room,users})=>{
+  console.log(users)
+  roomTitle.innerText=room;
+  users.map(user=>{
+    userList.insertAdjacentHTML("beforeend",`<li>${user.username}</i>`)
+  })
+
 })

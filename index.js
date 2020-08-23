@@ -48,6 +48,8 @@ io.on('connection', (socket) => {
   //sends message to other users of specific room when the new user joins to that room
   socket.broadcast.to(user.room).emit('message',generateMessage("admin",`${user.username} has joined`))
    
+//display the active users on sidebar
+  io.to(user.room).emit('roomData',{room:user.room,users:getUsersInRoom(user.room)})
 
   callback()
   })
@@ -70,7 +72,8 @@ io.on('connection', (socket) => {
     const user=getUser(socket.id)
 
       io.to(user.room).emit('locationMessage',generateMessage(user.username,`https://google.com/maps?q=${latitude},${longitude}`))
-        //for the acknowledgement that the location has been shared
+       
+      //for the acknowledgement that the location has been shared
         callback()
   })
 
@@ -81,7 +84,11 @@ io.on('connection', (socket) => {
   // console.log(...user)
    if(user){
     io.to(user[0].room).emit('message',generateMessage("admin",`${user[0].username} has Left`))
-   }
+    
+    //to display the active users on siderbar
+    io.to(user.room).emit('roomData',{room:user.room,users:getUsersInRoom(user.room)})
+
+  }
   })
   });
   
