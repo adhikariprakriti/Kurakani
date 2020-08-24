@@ -1,22 +1,72 @@
 const socket=io();
+const queryParamsString = window.location.search.substr(1).replace(/&/g,' ').replace(/=/g,'').replace(/username/g,'').replace(/room/g,'');
+const[name,room]=queryParamsString.split(' ');
+
+
 
 socket.on('message',(message)=>{
     console.log(message)
+   
+
     //Insert html into specified position
-    document.querySelector("#messages").insertAdjacentHTML("beforeend",
-    `<li class="message">
-    <div class="message__title">
-        <h4>${message.username}</h4>
-        <span>${message.createdAt}</span>
-    </div>
-    <div class="message__body">
-       <p>${message.text}</p>
-    </div>
-    </li>`)
+
+    if(message.username===name.toLowerCase()){
+     // console.log("i sent message........")
+      document.querySelector("#messages").insertAdjacentHTML("beforeend",
+      `<li class="message">
+      <div class="message__title__sent">
+          <h4>${message.username}</h4>
+          <span>${message.createdAt}</span>
+      </div>
+      <div class="message__body__sent">
+         <p>${message.text}</p>
+      </div>
+      </li>`)
+  
+  
+    }else{
+    // console.log("fdfvfvfv")
+     document.querySelector("#messages").insertAdjacentHTML("beforeend",
+     `<div class="message__list">
+     <li class="message">
+     <div class="message__title">
+         <h4>${message.username}</h4>
+         <span>${message.createdAt}</span>
+     </div>
+     <div class="message__body">
+        <p>${message.text}</p>
+     </div>
+     </li>
+     </div>`)
+
+    }
+ 
 })
 
+
 socket.on('locationMessage',(url)=>{
-    console.log(url)
+  //  console.log(url)
+
+
+  //to distinguish sent and received messages
+    if(url.username===name.toLowerCase()){
+      //Insert html into specified position
+    document.querySelector("#messages").insertAdjacentHTML("beforeend",
+    `<li class="message">
+    <div class="message__title__sent">
+      <h4>${url.username}</h4>
+      <span>${url.createdAt}</span>
+    </div>
+    <div class="message__body__sent">
+      <p>
+        <a href="${url.text}" target="_blank">My current location</a>
+      </p>
+    </div>
+  </li>`
+  )
+    }else{
+    
+
     //Insert html into specified position
     document.querySelector("#messages").insertAdjacentHTML("beforeend",
     `<li class="message">
@@ -31,6 +81,7 @@ socket.on('locationMessage',(url)=>{
     </div>
   </li>`
   )
+    }
 })
 
 
@@ -53,6 +104,7 @@ messageForm.addEventListener('submit',(event)=>{
     const message=event.target.elements.message.value
     
     socket.emit("sendMessage",message,(error)=>{
+
          //clear input field after sending message
          messageInput.value=null
          messageInput.focus();
@@ -103,10 +155,12 @@ socket.emit('join',location.search,(error)=>{
 })
 
 socket.on('roomData',({room,users})=>{
-  console.log(users)
-  roomTitle.innerText=room;
-  users.map(user=>{
-    userList.insertAdjacentHTML("beforeend",`<li>${user.username}</i>`)
-  })
-
+  // console.log(users)
+   roomTitle.innerText=room;
+  document.querySelector("ul").innerHTML=null
+   users.map(user=>{
+     userList.insertAdjacentHTML("beforeend",`<li id="usersList">${user.username}</i>`)
+   })
 })
+
+

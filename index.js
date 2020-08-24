@@ -63,6 +63,8 @@ io.on('connection', (socket) => {
        return callback("profanity is not allowed")
      }
 
+
+
     io.to(user.room).emit('message',generateMessage(user.username,message))
     //for the acknowledgement of event
     callback();
@@ -77,16 +79,18 @@ io.on('connection', (socket) => {
         callback()
   })
 
+
+
   //runs when the user gets disconnected
   socket.on('disconnect',()=>{
    const user=removeUser(socket.id)
-  // const{id,room,username}= (...user)
-  // console.log(...user)
+
+
    if(user){
     io.to(user[0].room).emit('message',generateMessage("admin",`${user[0].username} has Left`))
-    
-    //to display the active users on siderbar
-    io.to(user.room).emit('roomData',{room:user.room,users:getUsersInRoom(user.room)})
+
+  //to display the active users on siderbar
+  io.to(user[0].room).emit('roomData',{room:user[0].room,users:getUsersInRoom(user[0].room)})
 
   }
   })

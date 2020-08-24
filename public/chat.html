@@ -9,16 +9,20 @@
 </head>
 <body class="chat">
     <div id="sidebar" class="chat__sidebar">
-        <h2 class="room-title"></h2>
+        <div class="room">        
+            <h2 class="room-title"></h2>
+        </div>
+
         <h3 class="list-title">Users</h3>
         <ul class="users">
         </ul>
     </div>
 
     <div class="chat__main">
-    <ul id="messages" class="chat__messages"></ul>
-
-    <div class="chat__footer">
+            <ul id="messages" class="chat__messages">   
+            </ul>   
+           
+ <div class="chat__footer">
     <form method="POST" class="message-form">
         <input name="message" type="text" placeholder="Type Message....." value="" required autocomplete="off"/>
         <button id="send-button" type="submit">Send</button>
