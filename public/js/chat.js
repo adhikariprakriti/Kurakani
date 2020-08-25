@@ -3,13 +3,19 @@ const queryParamsString = window.location.search.substr(1).replace(/&/g,' ').rep
 const[name,room]=queryParamsString.split(' ');
 
 
+const autoscroll=()=>{
+  var allMessages=document.getElementsByClassName('message');
+
+  allMessages[allMessages.length-1].scrollIntoView();
+
+}
+
+
 
 socket.on('message',(message)=>{
     console.log(message)
-   
 
     //Insert html into specified position
-
     if(message.username===name.toLowerCase()){
      // console.log("i sent message........")
       document.querySelector("#messages").insertAdjacentHTML("beforeend",
@@ -22,7 +28,6 @@ socket.on('message',(message)=>{
          <p>${message.text}</p>
       </div>
       </li>`)
-  
   
     }else{
     // console.log("fdfvfvfv")
@@ -40,13 +45,12 @@ socket.on('message',(message)=>{
      </div>`)
 
     }
- 
+    autoscroll()
 })
 
 
 socket.on('locationMessage',(url)=>{
   //  console.log(url)
-
 
   //to distinguish sent and received messages
     if(url.username===name.toLowerCase()){
@@ -82,6 +86,7 @@ socket.on('locationMessage',(url)=>{
   </li>`
   )
     }
+autoscroll();    
 })
 
 

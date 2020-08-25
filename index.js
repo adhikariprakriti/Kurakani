@@ -23,11 +23,6 @@ const viewsPath=path.join(__dirname,'/public/views')
 //setup static directory to serve
 app.use(express.static(publicDirectoryPath));
 
-// app.get('/',(req,res)=>{
-//   res.render('index')   
-// })
-
-
 
 io.on('connection', (socket) => {
     console.log('new web socket connection');
@@ -38,6 +33,8 @@ io.on('connection', (socket) => {
     const {error,user}=addUser({id:socket.id,username,room})
     if(error){
          return callback(error)
+
+         
     }
     //join individual room and this method can be used only in server
     socket.join(user.room)
@@ -62,8 +59,6 @@ io.on('connection', (socket) => {
      if(filter.isProfane(message)){
        return callback("profanity is not allowed")
      }
-
-
 
     io.to(user.room).emit('message',generateMessage(user.username,message))
     //for the acknowledgement of event
